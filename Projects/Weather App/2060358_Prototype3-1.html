@@ -1,0 +1,172 @@
+<!-- Student name: Siddhant Chaudhary
+Student Id: 2060358 -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Weather app</title>
+
+    <style>
+      *{
+        padding: 0;
+        margin: 0;
+      }
+      @import url('https://fonts.googleapis.com/css2?family=Uchen&display=swap');  
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Uchen', serif;
+        /* background: #222; */
+        background-image: url('https://w.wallhaven.cc/full/e7/wallhaven-e79om8.jpg');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        font-size: 120%;
+      }
+      hr {
+        border-style: none;
+        border-top-style: dotted;
+        border-color: #00ADB5;
+        border-width: 5px;
+        width: 100%;
+        margin-bottom: 1em;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        padding: 2em;
+        border-radius: 30px;
+        width: 100%;
+        max-width: 420px;
+        margin: 1em;
+      }
+
+      .city {
+        background: #393E46;
+        color: white;
+        padding: 1em;
+        border-radius: 30px;
+        width: 100%;
+        max-width: 250px;
+        margin-bottom: 1rem;
+      }
+
+      .description {
+        text-transform: capitalize;
+        margin-left: 8px;
+      }
+
+      .info{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-right: 10px;
+        padding-left: 10px;
+      }
+
+      h1.temp {
+        text-align:center;
+        font-size: 60px;
+        margin: 0;
+        margin-bottom: 0.4em;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="weather">
+        <h1 class ="city">loading.....</h1>
+        
+        <h1 class="temp">loading.....</h1>
+        <hr>
+        <div class="feels_like">loading....</div>
+        <div class="temp_min">loading....</div>
+        <div class="temp_max">loading....</div>
+        <div class="info">
+          <img src="" alt="" class="icon"/>
+          <div class="description">loading.....</div>
+        </div>
+        <div class="humidity">loading.....</div>
+        <div class="wind">loading.....</div>
+        <div class="pressure">loading.....</div>
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      // Checking if the browser cache is 10 sec old 
+
+      if(localStorage.when != null
+
+        && parseInt(localStorage.when) + 10000 > Date.now()) {
+        let freshness = Math.round((Date.now() - localStorage.when)/1000) + " second(s)";
+
+        document.getElementsByClassName("city")[0].innerHTML = ("Weather in ") + localStorage.city;
+        document.getElementsByClassName("temp")[0].innerHTML = localStorage.temp;
+        document.querySelector(".icon").src ="https://openweathermap.org/img/wn/" + localStorage.icon + "@2x.png";
+        document.getElementsByClassName("humidity")[0].innerHTML = ("Humidity: ") + localStorage.humidity;
+        document.getElementsByClassName("description")[0].innerHTML = localStorage.description;
+        document.getElementsByClassName("pressure")[0].innerHTML = ("Pressure: ") + localStorage.pressure;
+        document.getElementsByClassName("wind")[0].innerHTML = ("Wind Speed: ") + localStorage.wind;
+        document.getElementsByClassName("feels_like")[0].innerHTML = ("Feels like: ") + localStorage.feels_like;
+        document.getElementsByClassName("temp_min")[0].innerHTML = ("Minimum Temperature: ") + localStorage.temperature_min;
+        document.getElementsByClassName("temp_max")[0].innerHTML = ("Maximum Temperature: ") + localStorage.temperature_max;
+
+        document.getElementsByClassName("myLastUpdated").innerHTML = freshness;
+
+
+      // if there is no local cache, accesses network
+      } else {
+        
+        fetch('http:/localhost:4545/index.php?city=Slough') // Fetching weather data from API for given city
+        // Converting response string to json object
+        .then(response => response.json())
+        .then(response => {
+    
+        document.getElementsByClassName("city")[0].innerHTML = ("Weather in ") + response.city;
+        document.getElementsByClassName("temp")[0].innerHTML = response.weather_temperature + ' °C';
+        document.querySelector(".icon").src ="https://openweathermap.org/img/wn/" + response.icon + "@2x.png";
+        document.getElementsByClassName("humidity")[0].innerHTML = ("Humidity: ") + response.humidity  + ' %';
+        document.getElementsByClassName("description")[0].innerHTML = response.weather_description;
+        document.getElementsByClassName("pressure")[0].innerHTML = ("Pressure: ") + response.pressure + ' Pa';
+        document.getElementsByClassName("wind")[0].innerHTML = ("Wind Speed: ") + response.weather_wind+ ' km/h';
+        document.getElementsByClassName("feels_like")[0].innerHTML = ("Feels like: ") + localStorage.feels_like;
+        document.getElementsByClassName("temp_min")[0].innerHTML = ("Minimum Temperature: ") + localStorage.temperature_min;
+        document.getElementsByClassName("temp_max")[0].innerHTML = ("Minimum Temperature: ") + localStorage.temperature_max;
+
+
+        document.getElementsByClassName("myLastUpdated").innerHTML = response.weather_when; 
+
+        // Save new data to browser in local storage
+        localStorage.city = response.city;
+        localStorage.temp = response.weather_temperature + ' °C';
+        localStorage.icon = response.icon;
+        localStorage.humidity = response.humidity + ' %';
+        localStorage.description = response.weather_description;
+        localStorage.pressure = response.pressure + ' Pa';
+        localStorage.wind = response.weather_wind + ' km/h';
+        localStorage.feels_like = response.feels_like + ' °C';
+        localStorage.temperature_min = response.temperature_min + ' °C';
+        localStorage.temperature_max = response.temperature_max + ' °C';
+
+        localStorage.when = Date.now(); 
+        })
+        .catch(err => {
+        // Display errors in console
+        console.log(err);
+        });
+      }                                       
+
+    </script>
+  </body>
+</html>
