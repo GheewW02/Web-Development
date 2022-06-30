@@ -10,7 +10,7 @@ $result = $mysqli -> query($sql);
 
 
 if ($result->num_rows == 0) {
-$url = 'https://api.openweathermap.org/data/2.5/weather?q=' . $_GET['city'] . '&appid=a96dcea5386fd9a44347dcb717ec5808&units=metric';
+$url = 'https://api.openweathermap.org/data/2.5/weather?q=' . $_GET['city'] . '&appid=##############&units=metric';
 
 
 //gets data from openweathermap and store in JSON object
